@@ -58,10 +58,7 @@ class Person:
         else:
             return "You did not check out this book."
 
-    def get_checked_out_books(self):
-        return self.books
-
-# Part 3 Unfinshed
+# Part 3
 
 class Library:
     def __init__(self):
@@ -81,38 +78,59 @@ class Library:
     
     def find_book(self, title):
         self.book_finds = []
-        if title in self.books:
-            self.book_finds.append(title)
+        for book in self.books:
+            if title == book.get_title():
+                self.book_finds.append(title)
         return self.book_finds
 
-    def get_total_books(self):
+    def get_total_books(self): 
         return len(self.books)
     
     def get_available_books(self):
         return self.get_total_books() - self.get_checked_out_books()
     
     def get_checked_out_books(self):
-        return ""
+        self.checked_out = 0
+        for book in self.books:
+            if book.get_available_copies() == 0:
+                self.checked_out += 1
+        return self.checked_out
     
     def get_borrowed_books(self, person):
-        return person.get_checked_out_books()
+        return person.books
     
     def check_out_book(self, person, book):
-        return ""
-    def return_book(self, person, book):
-        return ""
+        if book.get_available_copies() > 0 and book in self.books:
+            book.checked_out_copies += 1
+            return person.check_out_book(book)
+        else:
+            return "This book is not in the Library or no copies are available."
 
-myLibrary = Library()
-myLibrary.add_book("Hello World")
-myLibrary.add_book("Hello Space")
-myLibrary.add_book("Kings and Queens")
-myLibrary.add_book("Knights and Soldiers")
-myLibrary.add_book("Servants and Merchants")
-myLibrary.add_book("Peasants and Slaves")
+    def return_book(self, person, book):
+        if book.checked_out_copies() > 0 and book in self.books:
+            book.checked_out_copies -= 1
+            return person.return_book(book)
+        else:
+            return "This book is not the Library or you did not check out this book."
+        
+
+myBook = Book("Hello World", "Greg", 5)
+myBook2 = Book("Hello Space", "Anna", 7)
+myBook3 = Book("Kings and Queens", "Joe", 8)
+myBook4 = Book("Knights and Soldiers", "Trey", 3)
+myBook5 = Book("Servants and Merchants", "Jack", 4)
+myBook6 = Book("Peasants and Slaves", "Martin", 12)
 
 myPerson = Person("Bob")
-myPerson.check_out_book("Hello Space")
-myPerson.check_out_book("Hello Servants and Merchants")
-myPerson.check_out_book("Hello Servants and Merchants")
+myPerson2 = Person("Amy")
+myPerson3 = Person("Bill")
+myPerson4 = Person("Toad")
 
-print(myLibrary.get_borrowed_books(myPerson))
+myLibrary = Library()
+myLibrary.add_book(myBook)
+myLibrary.add_book(myBook2)
+myLibrary.add_book(myBook3)
+myLibrary.add_book(myBook4)
+myLibrary.add_book(myBook5)
+myLibrary.add_book(myBook6)
+print("Hello World")
